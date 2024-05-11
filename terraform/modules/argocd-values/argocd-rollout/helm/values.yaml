@@ -1,0 +1,16 @@
+applications:
+  - name: redis
+    deploy: false
+    replicas: 3
+    canary:
+      steps:
+        - weight: 10
+          duration: 1m
+        - weight: 20
+          duration: 1m
+        - weight: 50
+          duration: 1m
+    image:
+      repository: <redis-image-repo>
+      tag: <tag>
+    port: 6379

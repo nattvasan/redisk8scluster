@@ -1,0 +1,620 @@
+Terraform will perform the following actions:
+
+  # azurerm_resource_group.rg[0] will be created
+  + resource "azurerm_resource_group" "rg" {
+      + id       = (known after apply)
+      + location = "canadacentral"
+      + name     = "redis-rg-k8s"
+    }
+
+  # azurerm_role_assignment.contributor will be created
+  + resource "azurerm_role_assignment" "contributor" {
+      + id                               = (known after apply)
+      + name                             = (known after apply)
+      + principal_id                     = (known after apply)
+      + principal_type                   = (known after apply)
+      + role_definition_id               = (known after apply)
+      + role_definition_name             = "Contributor"
+      + scope                            = "/subscriptions/fb549723-3477-4f2b-89dd-ddc44930a836"
+      + skip_service_principal_aad_check = (known after apply)
+    }
+
+  # azurerm_role_assignment.key_vault_admin will be created
+  + resource "azurerm_role_assignment" "key_vault_admin" {
+      + id                               = (known after apply)
+      + name                             = (known after apply)
+      + principal_id                     = "fc6f991f-c024-434b-b34a-9fd62a265463"
+      + principal_type                   = (known after apply)
+      + role_definition_id               = (known after apply)
+      + role_definition_name             = "Contributor"
+      + scope                            = "/subscriptions/fb549723-3477-4f2b-89dd-ddc44930a836/resourceGroups/redis-rg-k8s"
+      + skip_service_principal_aad_check = (known after apply)
+    }
+
+  # azurerm_role_assignment.owner will be created
+  + resource "azurerm_role_assignment" "owner" {
+      + id                               = (known after apply)
+      + name                             = (known after apply)
+      + principal_id                     = (known after apply)
+      + principal_type                   = (known after apply)
+      + role_definition_id               = (known after apply)
+      + role_definition_name             = "Owner"
+      + scope                            = "/subscriptions/fb549723-3477-4f2b-89dd-ddc44930a836/resourceGroups/redis-rg-k8s"
+      + skip_service_principal_aad_check = (known after apply)
+    }
+
+  # azurerm_role_assignment.role_sp_reader will be created
+  + resource "azurerm_role_assignment" "role_sp_reader" {
+      + id                               = (known after apply)
+      + name                             = (known after apply)
+      + principal_id                     = (known after apply)
+      + principal_type                   = (known after apply)
+      + role_definition_id               = (known after apply)
+      + role_definition_name             = "Key Vault Reader"
+      + scope                            = "/subscriptions/fb549723-3477-4f2b-89dd-ddc44930a836"
+      + skip_service_principal_aad_check = (known after apply)
+    }
+
+  # kubernetes_namespace.redis will be created
+  + resource "kubernetes_namespace" "redis" {
+      + id                               = (known after apply)
+      + wait_for_default_service_account = false
+
+      + metadata {
+          + generation       = (known after apply)
+          + name             = "redis"
+          + resource_version = (known after apply)
+          + uid              = (known after apply)
+        }
+    }
+
+  # module.aks.data.azurerm_kubernetes_service_versions.current will be read during apply
+  # (depends on a resource or a module with changes pending)
+ <= data "azurerm_kubernetes_service_versions" "current" {
+      + id              = (known after apply)
+      + include_preview = false
+      + latest_version  = (known after apply)
+      + location        = "canadacentral"
+      + versions        = (known after apply)
+    }
+
+  # module.aks.azurerm_kubernetes_cluster.aks will be created
+  + resource "azurerm_kubernetes_cluster" "aks" {
+      + api_server_authorized_ip_ranges     = (known after apply)
+      + dns_prefix                          = "redis-rg-k8s-cluster"
+      + fqdn                                = (known after apply)
+      + http_application_routing_zone_name  = (known after apply)
+      + id                                  = (known after apply)
+      + image_cleaner_enabled               = false
+      + image_cleaner_interval_hours        = 48
+      + kube_admin_config                   = (sensitive value)
+      + kube_admin_config_raw               = (sensitive value)
+      + kube_config                         = (sensitive value)
+      + kube_config_raw                     = (sensitive value)
+      + kubernetes_version                  = "1.27.7"
+      + location                            = "canadacentral"
+      + name                                = "redis-cluster-3"
+      + node_resource_group                 = (known after apply)
+      + node_resource_group_id              = (known after apply)
+      + oidc_issuer_url                     = (known after apply)
+      + open_service_mesh_enabled           = true
+      + portal_fqdn                         = (known after apply)
+      + private_cluster_enabled             = false
+      + private_cluster_public_fqdn_enabled = false
+      + private_dns_zone_id                 = (known after apply)
+      + private_fqdn                        = (known after apply)
+      + public_network_access_enabled       = true
+      + resource_group_name                 = "redis-rg-k8s"
+      + role_based_access_control_enabled   = true
+      + run_command_enabled                 = true
+      + sku_tier                            = "Free"
+      + support_plan                        = "KubernetesOfficial"
+      + tags                                = {
+          + "Created_by" = "redis_test_k8s_cluster"
+        }
+      + workload_identity_enabled           = false
+
+      + default_node_pool {
+          + enable_auto_scaling          = true
+          + kubelet_disk_type            = (known after apply)
+          + max_count                    = 3
+          + max_pods                     = (known after apply)
+          + min_count                    = 1
+          + name                         = "system"
+          + node_count                   = (known after apply)
+          + node_labels                  = {
+              + "environment"   = "prod"
+              + "nodepool-type" = "system"
+              + "nodepoolos"    = "linux"
+            }
+          + only_critical_addons_enabled = true
+          + orchestrator_version         = (known after apply)
+          + os_disk_size_gb              = 30
+          + os_disk_type                 = "Managed"
+          + os_sku                       = (known after apply)
+          + scale_down_mode              = "Delete"
+          + tags                         = {
+              + "Created_by" = "redis_test_k8s_cluster"
+            }
+          + type                         = "VirtualMachineScaleSets"
+          + ultra_ssd_enabled            = false
+          + vm_size                      = "Standard_D5_v2"
+          + workload_runtime             = (known after apply)
+          + zones                        = [
+              + "1",
+              + "2",
+              + "3",
+            ]
+        }
+
+      + key_vault_secrets_provider {
+          + secret_identity          = (known after apply)
+          + secret_rotation_enabled  = true
+          + secret_rotation_interval = "2m"
+        }
+
+      + network_profile {
+          + dns_service_ip     = (known after apply)
+          + docker_bridge_cidr = (known after apply)
+          + ip_versions        = (known after apply)
+          + load_balancer_sku  = "standard"
+          + network_mode       = (known after apply)
+          + network_plugin     = "azure"
+          + network_policy     = "azure"
+          + outbound_type      = "loadBalancer"
+          + pod_cidr           = (known after apply)
+          + pod_cidrs          = (known after apply)
+          + service_cidr       = (known after apply)
+          + service_cidrs      = (known after apply)
+        }
+    }
+
+  # module.aks.azurerm_kubernetes_cluster_node_pool.userpool will be created
+  + resource "azurerm_kubernetes_cluster_node_pool" "userpool" {
+      + enable_auto_scaling   = true
+      + id                    = (known after apply)
+      + kubelet_disk_type     = (known after apply)
+      + kubernetes_cluster_id = (known after apply)
+      + max_count             = 3
+      + max_pods              = (known after apply)
+      + min_count             = 1
+      + mode                  = "User"
+      + name                  = "user"
+      + node_count            = (known after apply)
+      + node_labels           = (known after apply)
+      + orchestrator_version  = (known after apply)
+      + os_disk_size_gb       = (known after apply)
+      + os_disk_type          = "Managed"
+      + os_sku                = (known after apply)
+      + os_type               = "Linux"
+      + priority              = "Regular"
+      + scale_down_mode       = "Delete"
+      + spot_max_price        = -1
+      + tags                  = {
+          + "Created_by" = "redis_test_k8s_cluster"
+        }
+      + ultra_ssd_enabled     = false
+      + vm_size               = "Standard_D5_v2"
+    }
+
+  # module.aks.null_resource.read_cluster_info will be created
+  + resource "null_resource" "read_cluster_info" {
+      + id = (known after apply)
+    }
+
+  # module.aks.tls_private_key.ssh[0] will be created
+  + resource "tls_private_key" "ssh" {
+      + algorithm                     = "RSA"
+      + ecdsa_curve                   = "P224"
+      + id                            = (known after apply)
+      + private_key_openssh           = (sensitive value)
+      + private_key_pem               = (sensitive value)
+      + private_key_pem_pkcs8         = (sensitive value)
+      + public_key_fingerprint_md5    = (known after apply)
+      + public_key_fingerprint_sha256 = (known after apply)
+      + public_key_openssh            = (known after apply)
+      + public_key_pem                = (known after apply)
+      + rsa_bits                      = 2048
+    }
+
+  # module.argocd.helm_release.argocd will be created
+  + resource "helm_release" "argocd" {
+      + atomic                     = false
+      + chart                      = "argo-cd"
+      + cleanup_on_fail            = false
+      + create_namespace           = false
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + manifest                   = (known after apply)
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "argocd"
+      + namespace                  = "argocd"
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + repository                 = "https://argoproj.github.io/argo-helm"
+      + reset_values               = false
+      + reuse_values               = false
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + timeout                    = 300
+      + verify                     = false
+      + version                    = "5.55.0"
+      + wait                       = true
+      + wait_for_jobs              = false
+
+      + set {
+          + name  = "crds.install"
+          + value = "true"
+        }
+      + set {
+          + name  = "server.service.type"
+          + value = "LoadBalancer"
+        }
+    }
+
+  # module.argocd.helm_release.argocd_apps will be created
+  + resource "helm_release" "argocd_apps" {
+      + atomic                     = false
+      + chart                      = "argocd-apps"
+      + cleanup_on_fail            = false
+      + create_namespace           = false
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + manifest                   = (known after apply)
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "argocd-apps"
+      + namespace                  = "argocd"
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + repository                 = "https://argoproj.github.io/argo-helm"
+      + reset_values               = false
+      + reuse_values               = false
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + timeout                    = 300
+      + values                     = [
+          + <<-EOT
+                projects:
+                  - name: redis
+                    sourceRepos:
+                    - https://github.com/nattvasan/redis-k8s.git
+                    destinations:
+                    - namespace: redis
+                      server: '*'
+            EOT,
+        ]
+      + verify                     = false
+      + version                    = "1.6.0"
+      + wait                       = true
+      + wait_for_jobs              = false
+    }
+
+  # module.argocd.helm_release.argocd_resources will be created
+  + resource "helm_release" "argocd_resources" {
+      + atomic                     = false
+      + chart                      = "../../modules/argocd-values/argocd-apps/helm"
+      + cleanup_on_fail            = false
+      + create_namespace           = false
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + manifest                   = (known after apply)
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "argocd-resources"
+      + namespace                  = (known after apply)
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + reset_values               = false
+      + reuse_values               = false
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + timeout                    = 300
+      + values                     = [
+          + <<-EOT
+                default:
+                  tag: &tag master
+                  repoURL: &repoURL https://github.com/nattvasan/redis-k8s.git
+                  helmValuesFile: &helmValuesFile values.yaml
+                  targetRevision: &targetRevision main
+
+
+                applications:
+                  redis:
+                    namespace: redis
+                    argocdProject: redis
+                    source:
+                      path: helm/redis-cluster
+                      repoURL: *repoURL
+                      targetRevision: *targetRevision
+                      valuesFile: *helmValuesFile
+            EOT,
+        ]
+      + verify                     = false
+      + version                    = "0.1.0"
+      + wait                       = true
+      + wait_for_jobs              = false
+    }
+
+  # module.argocd.helm_release.argocd_rollout will be created
+  + resource "helm_release" "argocd_rollout" {
+      + atomic                     = false
+      + chart                      = "argo-rollouts"
+      + cleanup_on_fail            = false
+      + create_namespace           = false
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + manifest                   = (known after apply)
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "argocd-rollouts"
+      + namespace                  = "argocd"
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + repository                 = "https://argoproj.github.io/argo-helm"
+      + reset_values               = false
+      + reuse_values               = false
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + timeout                    = 300
+      + verify                     = false
+      + version                    = "2.35.2"
+      + wait                       = true
+      + wait_for_jobs              = false
+
+      + set {
+          + name  = "dashboard.enabled"
+          + value = "true"
+        }
+      + set {
+          + name  = "dashboard.service.type"
+          + value = "LoadBalancer"
+        }
+      + set {
+          + name  = "installCRDs"
+          + value = "true"
+        }
+      + set {
+          + name  = "keepCRDs"
+          + value = "false"
+        }
+    }
+
+  # module.argocd.helm_release.argocd_rollout_apps will be created
+  + resource "helm_release" "argocd_rollout_apps" {
+      + atomic                     = false
+      + chart                      = "../../modules/argocd-values/argocd-rollout/helm"
+      + cleanup_on_fail            = false
+      + create_namespace           = false
+      + dependency_update          = false
+      + disable_crd_hooks          = false
+      + disable_openapi_validation = false
+      + disable_webhooks           = false
+      + force_update               = false
+      + id                         = (known after apply)
+      + lint                       = false
+      + manifest                   = (known after apply)
+      + max_history                = 0
+      + metadata                   = (known after apply)
+      + name                       = "argocd-resources"
+      + namespace                  = (known after apply)
+      + pass_credentials           = false
+      + recreate_pods              = false
+      + render_subchart_notes      = true
+      + replace                    = false
+      + reset_values               = false
+      + reuse_values               = false
+      + skip_crds                  = false
+      + status                     = "deployed"
+      + timeout                    = 300
+      + values                     = [
+          + <<-EOT
+                applications:
+                  - name: redis
+                    deploy: false
+                    replicas: 3
+                    canary:
+                      steps:
+                        - weight: 10
+                          duration: 1m
+                        - weight: 20
+                          duration: 1m
+                        - weight: 50
+                          duration: 1m
+                    image:
+                      repository: <redis-image-repo>
+                      tag: <tag>
+                    port: 6379
+            EOT,
+        ]
+      + verify                     = false
+      + version                    = "0.1.0"
+      + wait                       = true
+      + wait_for_jobs              = false
+    }
+
+  # module.argocd.kubernetes_namespace.argocd will be created
+  + resource "kubernetes_namespace" "argocd" {
+      + id                               = (known after apply)
+      + wait_for_default_service_account = false
+
+      + metadata {
+          + generation       = (known after apply)
+          + name             = "argocd"
+          + resource_version = (known after apply)
+          + uid              = (known after apply)
+        }
+    }
+
+  # module.keyvault.data.azurerm_client_config.current will be read during apply
+  # (depends on a resource or a module with changes pending)
+ <= data "azurerm_client_config" "current" {
+      + client_id       = (known after apply)
+      + id              = (known after apply)
+      + object_id       = (known after apply)
+      + subscription_id = (known after apply)
+      + tenant_id       = (known after apply)
+    }
+
+  # module.keyvault.azurerm_key_vault.key_vault will be created
+  + resource "azurerm_key_vault" "key_vault" {
+      + access_policy                 = (known after apply)
+      + enable_rbac_authorization     = true
+      + id                            = (known after apply)
+      + location                      = "canadacentral"
+      + name                          = "redis-vault-k8s-4"
+      + public_network_access_enabled = true
+      + purge_protection_enabled      = false
+      + resource_group_name           = "redis-rg-k8s"
+      + sku_name                      = "standard"
+      + soft_delete_retention_days    = 30
+      + tags                          = {
+          + "Created_by" = "redis_test_k8s_cluster"
+        }
+      + tenant_id                     = (known after apply)
+      + vault_uri                     = (known after apply)
+
+      + network_acls {
+          + bypass         = "AzureServices"
+          + default_action = "Allow"
+        }
+    }
+
+  # module.keyvault.azurerm_key_vault_access_policy.example will be created
+  + resource "azurerm_key_vault_access_policy" "example" {
+      + id                 = (known after apply)
+      + key_vault_id       = (known after apply)
+      + object_id          = "fc6f991f-c024-434b-b34a-9fd62a265463"
+      + secret_permissions = [
+          + "Get",
+          + "List",
+          + "Set",
+          + "Delete",
+        ]
+      + tenant_id          = (known after apply)
+    }
+
+  # module.keyvault.azurerm_key_vault_secret.example will be created
+  + resource "azurerm_key_vault_secret" "example" {
+      + id                      = (known after apply)
+      + key_vault_id            = (known after apply)
+      + name                    = "redis-cluster"
+      + resource_id             = (known after apply)
+      + resource_versionless_id = (known after apply)
+      + value                   = (sensitive value)
+      + version                 = (known after apply)
+      + versionless_id          = (known after apply)
+    }
+
+  # module.serviceprincipal.data.azuread_client_config.current will be read during apply
+  # (depends on a resource or a module with changes pending)
+ <= data "azuread_client_config" "current" {
+      + client_id = (known after apply)
+      + id        = (known after apply)
+      + object_id = (known after apply)
+      + tenant_id = (known after apply)
+    }
+
+  # module.serviceprincipal.azuread_application.main will be created
+  + resource "azuread_application" "main" {
+      + app_role_ids                = (known after apply)
+      + application_id              = (known after apply)
+      + client_id                   = (known after apply)
+      + disabled_by_microsoft       = (known after apply)
+      + display_name                = "redis-cluster"
+      + id                          = (known after apply)
+      + logo_url                    = (known after apply)
+      + oauth2_permission_scope_ids = (known after apply)
+      + object_id                   = (known after apply)
+      + owners                      = (known after apply)
+      + prevent_duplicate_names     = false
+      + publisher_domain            = (known after apply)
+      + sign_in_audience            = "AzureADMyOrg"
+      + tags                        = (known after apply)
+      + template_id                 = (known after apply)
+    }
+
+  # module.serviceprincipal.azuread_service_principal.main will be created
+  + resource "azuread_service_principal" "main" {
+      + account_enabled              = true
+      + app_role_assignment_required = true
+      + app_role_ids                 = (known after apply)
+      + app_roles                    = (known after apply)
+      + application_id               = (known after apply)
+      + application_tenant_id        = (known after apply)
+      + client_id                    = (known after apply)
+      + display_name                 = (known after apply)
+      + homepage_url                 = (known after apply)
+      + id                           = (known after apply)
+      + logout_url                   = (known after apply)
+      + oauth2_permission_scope_ids  = (known after apply)
+      + oauth2_permission_scopes     = (known after apply)
+      + object_id                    = (known after apply)
+      + owners                       = (known after apply)
+      + redirect_uris                = (known after apply)
+      + saml_metadata_url            = (known after apply)
+      + service_principal_names      = (known after apply)
+      + sign_in_audience             = (known after apply)
+      + tags                         = (known after apply)
+      + type                         = (known after apply)
+    }
+
+  # module.serviceprincipal.azuread_service_principal_password.main will be created
+  + resource "azuread_service_principal_password" "main" {
+      + display_name         = (known after apply)
+      + end_date             = (known after apply)
+      + id                   = (known after apply)
+      + key_id               = (known after apply)
+      + rotate_when_changed  = (known after apply)
+      + service_principal_id = (known after apply)
+      + start_date           = (known after apply)
+      + value                = (sensitive value)
+    }
+
+  # module.serviceprincipal.time_rotating.main will be created
+  + resource "time_rotating" "main" {
+      + day              = (known after apply)
+      + hour             = (known after apply)
+      + id               = (known after apply)
+      + minute           = (known after apply)
+      + month            = (known after apply)
+      + rfc3339          = (known after apply)
+      + rotation_days    = 10
+      + rotation_rfc3339 = (known after apply)
+      + second           = (known after apply)
+      + unix             = (known after apply)
+      + year             = (known after apply)
+    }
+
+Plan: 23 to add, 0 to change, 0 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────

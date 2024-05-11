@@ -1,0 +1,7 @@
+projects:
+  - name: redis
+    sourceRepos:
+    - https://github.com/nattvasan/redis-k8s.git
+    destinations:
+    - namespace: redis
+      server: '*'

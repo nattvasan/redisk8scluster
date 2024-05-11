@@ -1,0 +1,6 @@
+apiVersion: v2
+name: argocd-resources
+description: Deploys ArgoCD-related resources
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

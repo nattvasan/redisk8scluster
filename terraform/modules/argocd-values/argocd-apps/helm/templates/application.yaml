@@ -1,0 +1,56 @@
+{{- range $app, $appAttr := .Values.applications }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: {{ $app }}
+  {{- if .imageUpdate }}
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: {{ range $image, $imageAttr := .imageUpdate }}{{(print $image "=" .name ":" .tag )}},{{ end }}
+    {{- range $image, $imageAttr := .imageUpdate }}
+    argocd-image-updater.argoproj.io/{{ $image }}.pull-secret: pullsecret:{{ .pullSecret }}
+    argocd-image-updater.argoproj.io/{{ $image }}.helm.image-name: {{ .helmParameterPath.name }}
+    argocd-image-updater.argoproj.io/{{ $image }}.helm.image-tag: {{ .helmParameterPath.tag }}
+    argocd-image-updater.argoproj.io/{{ $image }}.update-strategy: {{ .updateStrategy }}
+    {{- end }}
+    {{- range $annotation := .annotations }}
+    {{ . }}
+    {{- end }}
+  {{- end }}
+spec:
+  destination:
+    namespace: {{ .namespace }}
+    server: https://kubernetes.default.svc
+  project: {{ .argocdProject }}
+  source:
+    path: {{ .source.path }}
+    repoURL: {{ .source.repoURL }}
+    targetRevision: {{ .source.targetRevision }}
+    helm:
+      {{- if .source.releaseName }}
+      releaseName: {{ .source.releaseName}}
+      {{- end }}
+      valueFiles:
+        - {{ .source.valuesFile }}
+      {{- if .source.values }}
+      values:
+      {{- .source.values | toYaml | indent 6 }}
+      {{- end }}
+      {{- if .source.parameters }}
+      parameters:
+        {{- range $parameter, $parameterAttr := .source.parameters }}
+        - name: {{ .name }}
+          {{- if .value }}
+          value: {{ .value | quote }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+  {{- if .source.syncPolicy }}
+  {{- if eq .source.syncPolicy "automated" }}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+  {{- end }}
+  {{- end }}
+---
+{{- end }}

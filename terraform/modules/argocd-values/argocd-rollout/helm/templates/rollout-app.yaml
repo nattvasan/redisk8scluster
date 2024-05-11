@@ -1,0 +1,32 @@
+{{- range .Values.applications }}
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ .name }}
+spec:
+  replicas: {{ .replicas }}
+  strategy:
+    canary:
+      steps:
+        {{- range $index, $step := .canary.steps }}
+        - setWeight: {{ $step.weight }}
+          {{- if $step.duration }}
+          pause:
+            duration: {{ $step.duration }}
+          {{- end }}
+        {{- end }}
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: {{ .name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .name }}
+    spec:
+      containers:
+      - name: {{ .name }}
+        image: {{ .image.repository }}:{{ .image.tag }}
+        ports:
+        - containerPort: {{ .port }}
+{{- end }}

@@ -1,0 +1,16 @@
+default:
+  tag: &tag master
+  repoURL: &repoURL https://github.com/nattvasan/redis-k8s.git
+  helmValuesFile: &helmValuesFile values.yaml
+  targetRevision: &targetRevision main
+
+
+applications:
+  redis:
+    namespace: redis
+    argocdProject: redis
+    source:
+      path: helm/redis-cluster
+      repoURL: *repoURL
+      targetRevision: *targetRevision
+      valuesFile: *helmValuesFile
