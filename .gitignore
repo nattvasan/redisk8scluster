@@ -49,3 +49,5 @@ crash.*.log
 
 # Local .terragrunt-cache dirs
 **/.terragrunt-cache
+terragrunt/.terragrunt-cache/
+.terragrunt-cache

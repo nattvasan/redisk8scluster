@@ -64,22 +64,22 @@ provider "helm" {
 EOF
 }
 
-remote_state {
-  backend = "azurerm"
-  config = {
-    tenant_id            = "${local.tenant_id}"
-    subscription_id      = "${local.subscription_id}"
-    key                  = "${path_relative_to_include()}/terraform.tfstate"
-    resource_group_name  = "tf-rg"
-    storage_account_name = "tfstateaccount"
-    container_name       = "tfstate"
-    key                  = "prod.terraform.tfstate"
-  }
-  generate = {
-    path      = "backend.tf"
-    if_exists = "overwrite_terragrunt"
-  }
-}
+// remote_state {
+//   backend = "azurerm"
+//   config = {
+//     tenant_id            = "${local.tenant_id}"
+//     subscription_id      = "${local.subscription_id}"
+//     key                  = "${path_relative_to_include()}/terraform.tfstate"
+//     resource_group_name  = "tf-rg"
+//     storage_account_name = "tfstateaccount"
+//     container_name       = "tfstate"
+//     key                  = "prod.terraform.tfstate"
+//   }
+//   generate = {
+//     path      = "backend.tf"
+//     if_exists = "overwrite_terragrunt"
+//   }
+// }
 
 inputs = merge(
   local.subscription_vars.locals
